@@ -4,6 +4,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.Manifest;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -33,9 +34,7 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
         getPermissions();
-
     }
 
     void getPermissions() {
@@ -54,7 +53,9 @@ public class MainActivity extends AppCompatActivity {
                                 getLocation();
                             } else {
                                 // No location access granted.
-                                getPermissions();
+                                finish();
+                                //Finish finishes lifecycle elegantly while exit(0) EXITS! the app
+                                //System.exit(0);
                             }
                         }
                 );
@@ -65,6 +66,12 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        Toast.makeText(getApplicationContext(), "Sorry, but we REALLY need to know where you are.", Toast.LENGTH_LONG).show();
+        super.onDestroy();
     }
 
     void getLocation() {
