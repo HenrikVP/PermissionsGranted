@@ -5,6 +5,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.Manifest;
 import android.os.Looper;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -17,15 +18,20 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 public class MainActivity extends AppCompatActivity {
 
-    FusedLocationProviderClient flpc;
-    Location loc;
+    private FusedLocationProviderClient flpc;
+    private Location loc;
+    private LocationCallback locationCallback;
+    private TextView lat, lon, alt, spe, bea;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +43,35 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        initGui();
         flpc = LocationServices.getFusedLocationProviderClient(this);
+
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult == null) {
+                    return;
+                }
+
+                for (Location location : locationResult.getLocations()) {
+                    if (location == null) continue;
+
+                    // Update UI with location data
+                    // ...
+                }
+            }
+        };
+
         getPermissions();
+    }
+
+    private void initGui(){
+        lat = findViewById(R.id.txt_latitude);
+        lon = findViewById(R.id.txt_longitude);
+        alt = findViewById(R.id.txt_altitude);
+        spe = findViewById(R.id.txt_speed);
+        bea = findViewById(R.id.txt_bearing);
     }
 
     @Override
@@ -48,8 +81,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            getPermissions();
+            return;
+        }
+
         LocationRequest locationRequest = new LocationRequest.Builder(
-                        Priority.PRIORITY_HIGH_ACCURACY,1000).build();
+                        Priority.PRIORITY_HIGH_ACCURACY,200).build();
         flpc.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
     }
 
