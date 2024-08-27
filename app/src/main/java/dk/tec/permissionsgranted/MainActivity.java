@@ -4,6 +4,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.Manifest;
+import android.os.Looper;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -16,7 +17,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,7 +37,20 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        flpc = LocationServices.getFusedLocationProviderClient(this);
         getPermissions();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startLocationUpdates();
+    }
+
+    private void startLocationUpdates() {
+        LocationRequest locationRequest = new LocationRequest.Builder(
+                        Priority.PRIORITY_HIGH_ACCURACY,1000).build();
+        flpc.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
     }
 
     void getPermissions() {
@@ -75,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void getLocation() {
-        flpc = LocationServices.getFusedLocationProviderClient(this);
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
