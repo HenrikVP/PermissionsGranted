@@ -59,6 +59,11 @@ public class MainActivity extends AppCompatActivity {
 
                     // Update UI with location data
                     // ...
+                    lat.setText("Latitude:" + location.getLatitude());
+                    lon.setText("Longitude:" + location.getLongitude());
+                    alt.setText("Altitude:" + location.getAltitude());
+                    spe.setText("Speed:" + location.getSpeed());
+                    bea.setText("Bearing:" + location.getBearing());
                 }
             }
         };
