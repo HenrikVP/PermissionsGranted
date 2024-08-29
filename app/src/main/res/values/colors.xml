@@ -2,4 +2,17 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Background color -->
+    <color name="background_dark_grey">#7E7B7B</color>
+    <color name="background_dark_grey_night">#D3CACA</color>
+    <!-- Primary Colors -->
+    <color name="primary_orange">#FF9800</color>
+    <color name="primary_yellow">#FFEB3B</color>
+
+    <!-- Other colors -->
+    <color name="primary_dark">#F57C00</color>
+    <color name="primary_light">#FFE0B2</color>
+    <color name="accent">#FFC107</color>
+    <color name="text_color">#FFFFFF</color>
 </resources>
